@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Backend.Data;
 using TaskFlow.Backend.Repositories;
@@ -10,6 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Controller registration
 builder.Services.AddControllers();
+
+// CORS Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // Dependency Injection
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -42,6 +53,9 @@ app.UseExceptionHandler(errorApp =>
         });
     });
 });
+
+// CORS Middleware
+app.UseCors("AllowAngularApp");
 
 // HTTP request pipeline
 if (app.Environment.IsDevelopment())

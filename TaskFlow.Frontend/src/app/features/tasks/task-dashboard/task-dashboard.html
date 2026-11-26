@@ -1,1 +1,88 @@
-<p>task-dashboard works!</p>
+<div class="dashboard-container">
+
+  <header class="dashboard-header">
+    <div>
+      <p class="eyebrow">TASK MANAGEMENT</p>
+      <h1>Dashboard</h1>
+      <p class="subtitle">
+        Track your tasks and monitor your productivity.
+      </p>
+    </div>
+
+    <button class="refresh-button"
+            type="button"
+            (click)="retry()"
+            [disabled]="loading()">
+      ↻ Refresh
+    </button>
+  </header>
+
+  @if (loading()) {
+    <div class="state-card">
+      <div class="loader"></div>
+      <p>Loading dashboard...</p>
+    </div>
+  }
+
+  @else if (error()) {
+    <div class="state-card error-state">
+      <h3>Something went wrong</h3>
+      <p>{{ error() }}</p>
+      <button type="button" class="retry-button" (click)="retry()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  @else if (summary(); as data) {
+    <section class="stats-grid">
+
+      <article class="stat-card total-card">
+        <div class="stat-icon">▤</div>
+        <p class="stat-label">Total Tasks</p>
+        <h2>{{ data.totalTasks }}</h2>
+        <span class="stat-description">All tasks</span>
+      </article>
+
+      <article class="stat-card pending-card">
+        <div class="stat-icon">◷</div>
+        <p class="stat-label">Pending Tasks</p>
+        <h2>{{ data.pendingTasks }}</h2>
+        <span class="stat-description">Waiting to start</span>
+      </article>
+
+      <article class="stat-card progress-card">
+        <div class="stat-icon">↻</div>
+        <p class="stat-label">In Progress</p>
+        <h2>{{ data.inProgressTasks }}</h2>
+        <span class="stat-description">Currently working</span>
+      </article>
+
+      <article class="stat-card completed-card">
+        <div class="stat-icon">✓</div>
+        <p class="stat-label">Completed Tasks</p>
+        <h2>{{ data.completedTasks }}</h2>
+        <span class="stat-description">Successfully completed</span>
+      </article>
+
+      <article class="stat-card overdue-card">
+        <div class="stat-icon">!</div>
+        <p class="stat-label">Overdue Tasks</p>
+        <h2>{{ data.overdueTasks }}</h2>
+        <span class="stat-description">Past due date</span>
+      </article>
+
+    </section>
+
+    <section class="welcome-card">
+      <div>
+        <h2>Your productivity overview</h2>
+        <p>
+          Keep your tasks organized, stay focused and complete your work on time.
+        </p>
+      </div>
+      <div class="welcome-icon">🚀</div>
+    </section>
+  }
+
+</div>
