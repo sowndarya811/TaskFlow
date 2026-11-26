@@ -12,6 +12,7 @@
     </a>
   </div>
 
+  <!-- Search and Filters -->
   <div class="filter-section">
 
     <div class="search-box">
@@ -30,8 +31,7 @@
 
     <select
       [value]="selectedStatus()"
-      (change)="onStatusChange($event)"
-    >
+      (change)="onStatusChange($event)">
       <option value="">All Statuses</option>
       <option value="Pending">Pending</option>
       <option value="In Progress">In Progress</option>
@@ -40,8 +40,7 @@
 
     <select
       [value]="selectedPriority()"
-      (change)="onPriorityChange($event)"
-    >
+      (change)="onPriorityChange($event)">
       <option value="">All Priorities</option>
       <option value="Low">Low</option>
       <option value="Medium">Medium</option>
@@ -51,17 +50,35 @@
     <button
       type="button"
       class="clear-btn"
-      (click)="clearFilters()"
-    >
+      (click)="clearFilters()">
       Clear Filters
     </button>
 
   </div>
 
+  <!-- Sorting -->
+  <div class="sorting-section">
+    <label for="sortTasks">Sort By:</label>
+
+    <select
+      id="sortTasks"
+      [value]="sortOption()"
+      (change)="onSortChange($event)">
+
+      <option value="dueDateAsc">Due Date: Oldest First</option>
+      <option value="dueDateDesc">Due Date: Newest First</option>
+      <option value="priorityDesc">Priority: High to Low</option>
+      <option value="priorityAsc">Priority: Low to High</option>
+
+    </select>
+  </div>
+
+  <!-- Loading -->
   <div *ngIf="loading()" class="message loading-message">
     Loading tasks...
   </div>
 
+  <!-- Error -->
   <div *ngIf="error()" class="message error-message">
     {{ error() }}
 
@@ -70,12 +87,14 @@
     </button>
   </div>
 
+  <!-- Status Update Error -->
   <div *ngIf="statusUpdateError()" class="message error-message">
     {{ statusUpdateError() }}
   </div>
 
   <ng-container *ngIf="!loading() && !error()">
 
+    <!-- Task Table -->
     <div class="task-table-container">
 
       <table class="task-table">
@@ -94,7 +113,7 @@
 
         <tbody>
 
-          <tr *ngFor="let task of tasks()">
+          <tr *ngFor="let task of paginatedTasks()">
 
             <td>#{{ task.id }}</td>
 
@@ -115,8 +134,7 @@
                 class="priority-badge"
                 [class.low]="task.priority === 'Low'"
                 [class.medium]="task.priority === 'Medium'"
-                [class.high]="task.priority === 'High'"
-              >
+                [class.high]="task.priority === 'High'">
                 {{ task.priority }}
               </span>
             </td>
@@ -126,17 +144,17 @@
                 class="status-select"
                 [value]="task.status"
                 [disabled]="updatingTaskIds().includes(task.id)"
-                (change)="updateTaskStatus(task, $event)"
-              >
+                (change)="updateTaskStatus(task, $event)">
+
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
+
               </select>
 
               <small
                 *ngIf="updatingTaskIds().includes(task.id)"
-                class="updating-message"
-              >
+                class="updating-message">
                 Updating...
               </small>
             </td>
@@ -145,23 +163,20 @@
 
               <a
                 [routerLink]="['/tasks', task.id]"
-                class="view-btn"
-              >
+                class="view-btn">
                 View
               </a>
 
               <a
                 [routerLink]="['/tasks/edit', task.id]"
-                class="edit-btn"
-              >
+                class="edit-btn">
                 Edit
               </a>
 
               <button
                 type="button"
                 class="delete-btn"
-                (click)="deleteTask(task.id)"
-              >
+                (click)="deleteTask(task.id)">
                 Delete
               </button>
 
@@ -171,7 +186,8 @@
 
           <tr *ngIf="tasks().length === 0">
             <td colspan="7" class="empty-message">
-              No tasks found.
+              <strong>No tasks found.</strong>
+              <p>Try changing your search or filter criteria.</p>
             </td>
           </tr>
 
@@ -181,8 +197,38 @@
 
     </div>
 
-    <div class="task-count">
-      Total Tasks: <strong>{{ tasks().length }}</strong>
+    <!-- Pagination -->
+    <div class="pagination-section" *ngIf="tasks().length > 0">
+
+      <div class="task-count">
+        Showing <strong>{{ startItem() }}–{{ endItem() }}</strong>
+        of <strong>{{ tasks().length }}</strong> tasks
+      </div>
+
+      <div class="pagination-controls">
+
+        <button
+          type="button"
+          class="page-btn"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)">
+          Previous
+        </button>
+
+        <span class="page-info">
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+
+        <button
+          type="button"
+          class="page-btn"
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)">
+          Next
+        </button>
+
+      </div>
+
     </div>
 
   </ng-container>
