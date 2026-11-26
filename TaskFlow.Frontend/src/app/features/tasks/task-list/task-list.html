@@ -70,6 +70,10 @@
     </button>
   </div>
 
+  <div *ngIf="statusUpdateError()" class="message error-message">
+    {{ statusUpdateError() }}
+  </div>
+
   <ng-container *ngIf="!loading() && !error()">
 
     <div class="task-table-container">
@@ -118,14 +122,23 @@
             </td>
 
             <td>
-              <span
-                class="status-badge"
-                [class.pending]="task.status === 'Pending'"
-                [class.in-progress]="task.status === 'In Progress'"
-                [class.completed]="task.status === 'Completed'"
+              <select
+                class="status-select"
+                [value]="task.status"
+                [disabled]="updatingTaskIds().includes(task.id)"
+                (change)="updateTaskStatus(task, $event)"
               >
-                {{ task.status }}
-              </span>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+
+              <small
+                *ngIf="updatingTaskIds().includes(task.id)"
+                class="updating-message"
+              >
+                Updating...
+              </small>
             </td>
 
             <td class="action-buttons">

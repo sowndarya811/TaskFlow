@@ -323,3 +323,32 @@
     width: 100%;
   }
 }
+
+.status-select {
+  min-width: 125px;
+  padding: 7px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.updating-message {
+  display: block;
+  margin-top: 5px;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.status-select:focus {
+  outline: 2px solid #93c5fd;
+  border-color: #3b82f6;
+}
+

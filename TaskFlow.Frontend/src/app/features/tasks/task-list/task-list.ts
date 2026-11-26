@@ -9,7 +9,8 @@ import {
   Task,
   TaskStatus,
   TaskPriority,
-  TaskFilters
+  TaskFilters,
+  UpdateTaskRequest
 } from '../../../core/models/task.model';
 
 @Component({
@@ -30,6 +31,9 @@ export class TaskList implements OnInit {
   searchTerm = signal<string>('');
   selectedStatus = signal<TaskStatus | ''>('');
   selectedPriority = signal<TaskPriority | ''>('');
+
+  updatingTaskIds = signal<number[]>([]);
+  statusUpdateError = signal<string>('');
 
   ngOnInit(): void {
     this.loadTasks();
@@ -84,6 +88,52 @@ export class TaskList implements OnInit {
     this.selectedStatus.set('');
     this.selectedPriority.set('');
     this.loadTasks();
+  }
+
+  updateTaskStatus(task: Task, event: Event): void {
+    const newStatus = (event.target as HTMLSelectElement).value as TaskStatus;
+
+    if (newStatus === task.status) {
+      return;
+    }
+
+    const request: UpdateTaskRequest = {
+      title: task.title,
+      description: task.description,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      status: newStatus
+    };
+
+    this.statusUpdateError.set('');
+    this.updatingTaskIds.update(ids => [...ids, task.id]);
+
+    this.taskService.updateTask(task.id, request).subscribe({
+      next: (updatedTask) => {
+        this.tasks.update(currentTasks =>
+          currentTasks.map(item =>
+            item.id === task.id ? updatedTask : item
+          )
+        );
+
+        this.updatingTaskIds.update(ids =>
+          ids.filter(id => id !== task.id)
+        );
+      },
+      error: (err) => {
+        console.error('Error updating task status:', err);
+
+        this.statusUpdateError.set(
+          `Unable to update status for "${task.title}". Please try again.`
+        );
+
+        this.updatingTaskIds.update(ids =>
+          ids.filter(id => id !== task.id)
+        );
+
+        this.loadTasks();
+      }
+    });
   }
 
   deleteTask(id: number): void {
