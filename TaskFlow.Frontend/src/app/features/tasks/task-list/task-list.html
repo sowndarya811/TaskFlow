@@ -127,14 +127,23 @@
                 {{ task.status }}
               </span>
             </td>
-            <a
-  [routerLink]="['/tasks/edit', task.id]"
-  class="edit-btn"
->
-  Edit
-</a>
 
-            <td>
+            <td class="action-buttons">
+
+              <a
+                [routerLink]="['/tasks', task.id]"
+                class="view-btn"
+              >
+                View
+              </a>
+
+              <a
+                [routerLink]="['/tasks/edit', task.id]"
+                class="edit-btn"
+              >
+                Edit
+              </a>
+
               <button
                 type="button"
                 class="delete-btn"
@@ -142,6 +151,7 @@
               >
                 Delete
               </button>
+
             </td>
 
           </tr>

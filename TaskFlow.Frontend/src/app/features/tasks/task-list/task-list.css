@@ -5,6 +5,7 @@
   margin: 0 auto;
 }
 
+/* Page Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -36,6 +37,7 @@
   background: #4338ca;
 }
 
+/* Filters */
 .filter-section {
   display: flex;
   flex-wrap: wrap;
@@ -88,11 +90,20 @@
   color: white;
 }
 
+.search-box button:hover {
+  background: #4338ca;
+}
+
 .clear-btn {
   background: #e2e8f0;
   color: #334155;
 }
 
+.clear-btn:hover {
+  background: #cbd5e1;
+}
+
+/* Task Table */
 .task-table-container {
   overflow-x: auto;
   background: white;
@@ -103,7 +114,7 @@
 .task-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 850px;
+  min-width: 950px;
 }
 
 .task-table th,
@@ -137,6 +148,7 @@
   max-width: 220px;
 }
 
+/* Priority Badges */
 .priority-badge,
 .status-badge {
   display: inline-block;
@@ -162,6 +174,7 @@
   color: #991b1b;
 }
 
+/* Status Badges */
 .status-badge.pending {
   background: #fef3c7;
   color: #92400e;
@@ -175,6 +188,42 @@
 .status-badge.completed {
   background: #dcfce7;
   color: #166534;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.view-btn,
+.edit-btn {
+  display: inline-block;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.view-btn {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.view-btn:hover {
+  background: #99f6e4;
+}
+
+.edit-btn {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.edit-btn:hover {
+  background: #bfdbfe;
 }
 
 .delete-btn {
@@ -191,6 +240,7 @@
   background: #fecaca;
 }
 
+/* Loading and Error Messages */
 .message {
   padding: 18px;
   margin-bottom: 20px;
@@ -213,12 +263,14 @@
   cursor: pointer;
 }
 
+/* Empty State */
 .empty-message {
   text-align: center !important;
   padding: 40px !important;
   color: #64748b !important;
 }
 
+/* Task Count */
 .task-count {
   text-align: right;
   margin-top: 18px;
@@ -229,6 +281,7 @@
   color: #1e293b;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .task-page {
     padding: 18px;
@@ -252,18 +305,21 @@
     width: 100%;
   }
 }
-.edit-btn {
-  display: inline-block;
-  background: #dbeafe;
-  color: #1d4ed8;
-  border-radius: 5px;
-  padding: 8px 12px;
-  margin-right: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-}
 
-.edit-btn:hover {
-  background: #bfdbfe;
+@media (max-width: 480px) {
+  .task-page {
+    padding: 12px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box button {
+    width: 100%;
+  }
 }
