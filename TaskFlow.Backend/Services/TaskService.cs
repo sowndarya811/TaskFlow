@@ -14,9 +14,13 @@ public class TaskService : ITaskService
         _taskRepository = taskRepository;
     }
 
-    public async Task<IEnumerable<TaskItem>> GetAllTasksAsync()
+    public async Task<IEnumerable<TaskItem>> GetAllTasksAsync(
+        string? search,
+        string? status,
+        string? priority)
     {
-        return await _taskRepository.GetAllAsync();
+        return await _taskRepository.GetAllAsync(
+            search, status, priority);
     }
 
     public async Task<TaskItem?> GetTaskByIdAsync(int id)
@@ -41,7 +45,6 @@ public class TaskService : ITaskService
             return null;
 
         task.Id = id;
-
         return await _taskRepository.UpdateAsync(task);
     }
 

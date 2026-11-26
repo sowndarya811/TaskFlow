@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Backend.Data;
 using TaskFlow.Backend.Models;
@@ -14,9 +15,32 @@ public class TaskRepository : ITaskRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<TaskItem>> GetAllAsync()
+    public async Task<IEnumerable<TaskItem>> GetAllAsync(
+        string? search,
+        string? status,
+        string? priority)
     {
-        return await _context.Tasks.ToListAsync();
+        var query = _context.Tasks.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(t =>
+                t.Title.Contains(search));
+        }
+
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            query = query.Where(t =>
+                t.Status == status);
+        }
+
+        if (!string.IsNullOrWhiteSpace(priority))
+        {
+            query = query.Where(t =>
+                t.Priority == priority);
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task<TaskItem?> GetByIdAsync(int id)
