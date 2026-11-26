@@ -25,6 +25,24 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Global Exception Handling
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode =
+            StatusCodes.Status500InternalServerError;
+
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            statusCode = 500,
+            message = "An unexpected server error occurred."
+        });
+    });
+});
+
 // HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
