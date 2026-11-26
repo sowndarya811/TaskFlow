@@ -1,6 +1,7 @@
 
 <div class="task-page">
 
+  <!-- Page Header -->
   <div class="page-header">
     <div>
       <h1>Task Management</h1>
@@ -73,191 +74,267 @@
     </select>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="loading()" class="message loading-message">
-    Loading tasks...
+  <!-- Loading State -->
+  <div
+    *ngIf="loading()"
+    class="loading-container"
+    role="status"
+    aria-live="polite">
+
+    <div class="loading-spinner"></div>
+
+    <h3>Loading Tasks</h3>
+    <p>Please wait while we fetch your tasks...</p>
+
   </div>
 
-  <!-- Error -->
-  <div *ngIf="error()" class="message error-message">
-    {{ error() }}
+  <!-- Error State -->
+  <div
+    *ngIf="!loading() && error()"
+    class="error-container"
+    role="alert">
 
-    <button type="button" (click)="loadTasks()">
-      Retry
+    <div class="error-icon">!</div>
+
+    <h3>Unable to Load Tasks</h3>
+    <p>{{ error() }}</p>
+
+    <button
+      type="button"
+      class="retry-btn"
+      (click)="loadTasks()">
+      Try Again
     </button>
+
   </div>
 
-  <!-- Status Update Error -->
-  <div *ngIf="statusUpdateError()" class="message error-message">
-    {{ statusUpdateError() }}
-  </div>
-
+  <!-- Main Content -->
   <ng-container *ngIf="!loading() && !error()">
 
-    <!-- Task Table -->
-    <div class="task-table-container">
-
-      <table class="task-table">
-
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Task Title</th>
-            <th>Description</th>
-            <th>Due Date</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          <tr
-            *ngFor="let task of paginatedTasks()"
-            [class.overdue-row]="isOverdue(task)">
-
-            <td>#{{ task.id }}</td>
-
-            <td class="task-title">
-              {{ task.title }}
-            </td>
-
-            <td class="task-description">
-              {{ task.description || '-' }}
-            </td>
-
-            <!-- Due Date with Indicators -->
-            <td>
-              <span
-                class="due-date"
-                [class.overdue]="isOverdue(task)"
-                [class.due-today]="isDueToday(task)">
-
-                {{ task.dueDate | date:'dd MMM yyyy' }}
-
-                <small
-                  *ngIf="isOverdue(task)"
-                  class="due-label">
-                  Overdue
-                </small>
-
-                <small
-                  *ngIf="isDueToday(task)"
-                  class="due-label">
-                  Due Today
-                </small>
-
-              </span>
-            </td>
-
-            <!-- Priority -->
-            <td>
-              <span
-                class="priority-badge"
-                [class.low]="task.priority === 'Low'"
-                [class.medium]="task.priority === 'Medium'"
-                [class.high]="task.priority === 'High'">
-                {{ task.priority }}
-              </span>
-            </td>
-
-            <!-- Status -->
-            <td>
-              <select
-                class="status-select"
-                [value]="task.status"
-                [disabled]="updatingTaskIds().includes(task.id)"
-                (change)="updateTaskStatus(task, $event)">
-
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-
-              </select>
-
-              <small
-                *ngIf="updatingTaskIds().includes(task.id)"
-                class="updating-message">
-                Updating...
-              </small>
-            </td>
-
-            <!-- Actions -->
-            <td class="action-buttons">
-
-              <a
-                [routerLink]="['/tasks', task.id]"
-                class="view-btn">
-                View
-              </a>
-
-              <a
-                [routerLink]="['/tasks/edit', task.id]"
-                class="edit-btn">
-                Edit
-              </a>
-
-              <button
-                type="button"
-                class="delete-btn"
-                (click)="deleteTask(task.id)">
-                Delete
-              </button>
-
-            </td>
-
-          </tr>
-
-          <!-- Empty State -->
-          <tr *ngIf="tasks().length === 0">
-            <td colspan="7" class="empty-message">
-              <strong>No tasks found.</strong>
-              <p>Try changing your search or filter criteria.</p>
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-    <!-- Pagination -->
+    <!-- Status Update Error -->
     <div
-      class="pagination-section"
-      *ngIf="tasks().length > 0">
+      *ngIf="statusUpdateError()"
+      class="message error-message"
+      role="alert">
 
-      <div class="task-count">
-        Showing <strong>{{ startItem() }}–{{ endItem() }}</strong>
-        of <strong>{{ tasks().length }}</strong> tasks
-      </div>
-
-      <div class="pagination-controls">
-
-        <button
-          type="button"
-          class="page-btn"
-          [disabled]="currentPage() === 1"
-          (click)="goToPage(currentPage() - 1)">
-          Previous
-        </button>
-
-        <span class="page-info">
-          Page {{ currentPage() }} of {{ totalPages() }}
-        </span>
-
-        <button
-          type="button"
-          class="page-btn"
-          [disabled]="currentPage() === totalPages()"
-          (click)="goToPage(currentPage() + 1)">
-          Next
-        </button>
-
-      </div>
+      {{ statusUpdateError() }}
 
     </div>
+
+    <!-- Tasks Available -->
+    <ng-container *ngIf="tasks().length > 0; else emptyState">
+
+      <!-- Task Table -->
+      <div class="task-table-container">
+
+        <table class="task-table">
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Task Title</th>
+              <th>Description</th>
+              <th>Due Date</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr
+              *ngFor="let task of paginatedTasks()"
+              [class.overdue-row]="isOverdue(task)">
+
+              <td>#{{ task.id }}</td>
+
+              <td class="task-title">
+                {{ task.title }}
+              </td>
+
+              <td class="task-description">
+                {{ task.description || '-' }}
+              </td>
+
+              <!-- Due Date -->
+              <td>
+                <span
+                  class="due-date"
+                  [class.overdue]="isOverdue(task)"
+                  [class.due-today]="isDueToday(task)">
+
+                  {{ task.dueDate | date:'dd MMM yyyy' }}
+
+                  <small
+                    *ngIf="isOverdue(task)"
+                    class="due-label">
+                    Overdue
+                  </small>
+
+                  <small
+                    *ngIf="isDueToday(task)"
+                    class="due-label">
+                    Due Today
+                  </small>
+
+                </span>
+              </td>
+
+              <!-- Priority -->
+              <td>
+                <span
+                  class="priority-badge"
+                  [class.low]="task.priority === 'Low'"
+                  [class.medium]="task.priority === 'Medium'"
+                  [class.high]="task.priority === 'High'">
+                  {{ task.priority }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td>
+                <select
+                  class="status-select"
+                  [value]="task.status"
+                  [disabled]="updatingTaskIds().includes(task.id)"
+                  (change)="updateTaskStatus(task, $event)">
+
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+
+                </select>
+
+                <small
+                  *ngIf="updatingTaskIds().includes(task.id)"
+                  class="updating-message">
+                  Updating...
+                </small>
+              </td>
+
+              <!-- Actions -->
+              <td class="action-buttons">
+
+                <a
+                  [routerLink]="['/tasks', task.id]"
+                  class="view-btn">
+                  View
+                </a>
+
+                <a
+                  [routerLink]="['/tasks/edit', task.id]"
+                  class="edit-btn">
+                  Edit
+                </a>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  (click)="deleteTask(task.id)">
+                  Delete
+                </button>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section">
+
+        <div class="task-count">
+          Showing <strong>{{ startItem() }}-{{ endItem() }}</strong>
+          of <strong>{{ tasks().length }}</strong> tasks
+        </div>
+
+        <div class="pagination-controls">
+
+          <button
+            type="button"
+            class="page-btn"
+            [disabled]="currentPage() === 1"
+            (click)="goToPage(currentPage() - 1)">
+            Previous
+          </button>
+
+          <span class="page-info">
+            Page {{ currentPage() }} of {{ totalPages() }}
+          </span>
+
+          <button
+            type="button"
+            class="page-btn"
+            [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)">
+            Next
+          </button>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+    <!-- Empty State -->
+    <ng-template #emptyState>
+
+      <div class="empty-state-container">
+
+        <div class="empty-state-icon">
+          <span class="empty-icon-symbol">✓</span>
+        </div>
+
+        <!-- No Search Results -->
+        <ng-container
+          *ngIf="
+            searchTerm() ||
+            selectedStatus() ||
+            selectedPriority();
+            else noTasks
+          ">
+
+          <h2>No Matching Tasks</h2>
+
+          <p>
+            We couldn't find any tasks matching your search or filters.
+          </p>
+
+          <button
+            type="button"
+            class="empty-action-btn"
+            (click)="clearFilters()">
+            Clear Filters
+          </button>
+
+        </ng-container>
+
+        <!-- No Tasks at All -->
+        <ng-template #noTasks>
+
+          <h2>No Tasks Yet</h2>
+
+          <p>
+            You haven't created any tasks. Start organizing your work
+            by creating your first task.
+          </p>
+
+          <a
+            routerLink="/tasks/new"
+            class="empty-action-btn">
+            + Create Your First Task
+          </a>
+
+        </ng-template>
+
+      </div>
+
+    </ng-template>
 
   </ng-container>
 
