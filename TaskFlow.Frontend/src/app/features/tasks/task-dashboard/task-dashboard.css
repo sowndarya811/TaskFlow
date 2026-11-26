@@ -1,3 +1,4 @@
+
 :host {
   display: block;
 }
@@ -9,11 +10,15 @@
   color: #1e293b;
 }
 
-.dashboard-header {
+.dashboard-header,
+.section-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
+}
+
+.dashboard-header {
   margin-bottom: 32px;
 }
 
@@ -31,9 +36,11 @@
   margin: 0 0 8px;
 }
 
-.subtitle {
+.subtitle,
+.section-heading p,
+.section-description {
   color: #64748b;
-  font-size: 15px;
+  font-size: 14px;
   margin: 0;
 }
 
@@ -54,18 +61,24 @@
   cursor: not-allowed;
 }
 
+/* Statistics */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
-.stat-card {
+.stat-card,
+.dashboard-section {
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 24px;
   box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.stat-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -74,48 +87,11 @@
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
-.stat-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  font-size: 23px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.total-card .stat-icon {
-  background: #eef2ff;
-  color: #4f46e5;
-}
-
-.pending-card .stat-icon {
-  background: #fff7ed;
-  color: #ea580c;
-}
-
-.progress-card .stat-icon {
-  background: #eff6ff;
-  color: #2563eb;
-}
-
-.completed-card .stat-icon {
-  background: #ecfdf5;
-  color: #059669;
-}
-
-.overdue-card .stat-icon {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
 .stat-label {
   color: #64748b;
   font-size: 14px;
   font-weight: 500;
-  margin: 0 0 8px;
+  margin: 0 0 12px;
 }
 
 .stat-card h2 {
@@ -129,6 +105,251 @@
   font-size: 12px;
   color: #94a3b8;
 }
+
+.total-card {
+  border-top: 4px solid #6366f1;
+}
+
+.pending-card {
+  border-top: 4px solid #f97316;
+}
+
+.progress-card {
+  border-top: 4px solid #3b82f6;
+}
+
+.completed-card {
+  border-top: 4px solid #10b981;
+}
+
+.overdue-card {
+  border-top: 4px solid #ef4444;
+}
+
+/* Common dashboard sections */
+
+.dashboard-section {
+  margin-top: 24px;
+}
+
+.dashboard-section h2 {
+  font-size: 18px;
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+
+.section-heading {
+  margin-bottom: 22px;
+}
+
+.section-heading .percentage {
+  color: #4f46e5;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Progress bar */
+
+.progress-track {
+  width: 100%;
+  height: 13px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #10b981);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.progress-caption {
+  color: #64748b;
+  font-size: 13px;
+  margin: 12px 0 0;
+}
+
+/* Status and priority summaries */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  margin-top: 24px;
+}
+
+.summary-card .section-description {
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.summary-row strong {
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.pending-dot {
+  background: #f97316;
+}
+
+.progress-dot {
+  background: #3b82f6;
+}
+
+.completed-dot {
+  background: #10b981;
+}
+
+.high-dot {
+  background: #ef4444;
+}
+
+.medium-dot {
+  background: #f59e0b;
+}
+
+.low-dot {
+  background: #10b981;
+}
+
+/* Recent tasks */
+
+.recent-section {
+  margin-top: 24px;
+}
+
+.view-all-link {
+  color: #4f46e5;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+.recent-task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.recent-task-item:last-child {
+  border-bottom: none;
+}
+
+.recent-task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.recent-task-info a {
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.recent-task-info a:hover {
+  color: #4f46e5;
+}
+
+.recent-task-info span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.recent-task-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.priority-badge,
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.high-priority {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.medium-priority {
+  color: #b45309;
+  background: #fffbeb;
+}
+
+.low-priority {
+  color: #047857;
+  background: #ecfdf5;
+}
+
+.pending-status {
+  color: #c2410c;
+  background: #fff7ed;
+}
+
+.progress-status {
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.completed-status {
+  color: #047857;
+  background: #ecfdf5;
+}
+
+.empty-message {
+  color: #94a3b8;
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* Welcome section */
 
 .welcome-card {
   display: flex;
@@ -155,8 +376,12 @@
 }
 
 .welcome-icon {
-  font-size: 42px;
+  color: #4f46e5;
+  font-size: 22px;
+  font-weight: 700;
 }
+
+/* Loading and error states */
 
 .state-card {
   min-height: 220px;
@@ -201,13 +426,15 @@
   max-width: 500px;
 }
 
+/* Responsive layout */
+
 @media (max-width: 900px) {
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .dashboard-container {
     padding: 24px 16px;
   }
@@ -221,8 +448,18 @@
     font-size: 27px;
   }
 
-  .stats-grid {
+  .stats-grid,
+  .summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .recent-task-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .recent-task-meta {
+    justify-content: flex-start;
   }
 
   .welcome-card {

@@ -1,3 +1,4 @@
+
 <div class="dashboard-container">
 
   <header class="dashboard-header">
@@ -9,11 +10,12 @@
       </p>
     </div>
 
-    <button class="refresh-button"
-            type="button"
-            (click)="retry()"
-            [disabled]="loading()">
-      ↻ Refresh
+    <button
+      class="refresh-button"
+      type="button"
+      (click)="retry()"
+      [disabled]="loading()">
+      Refresh
     </button>
   </header>
 
@@ -23,7 +25,6 @@
       <p>Loading dashboard...</p>
     </div>
   }
-
   @else if (error()) {
     <div class="state-card error-state">
       <h3>Something went wrong</h3>
@@ -33,40 +34,36 @@
       </button>
     </div>
   }
-
   @else if (summary(); as data) {
+
+    <!-- Dashboard Statistics -->
     <section class="stats-grid">
 
       <article class="stat-card total-card">
-        <div class="stat-icon">▤</div>
         <p class="stat-label">Total Tasks</p>
         <h2>{{ data.totalTasks }}</h2>
         <span class="stat-description">All tasks</span>
       </article>
 
       <article class="stat-card pending-card">
-        <div class="stat-icon">◷</div>
         <p class="stat-label">Pending Tasks</p>
         <h2>{{ data.pendingTasks }}</h2>
         <span class="stat-description">Waiting to start</span>
       </article>
 
       <article class="stat-card progress-card">
-        <div class="stat-icon">↻</div>
         <p class="stat-label">In Progress</p>
         <h2>{{ data.inProgressTasks }}</h2>
         <span class="stat-description">Currently working</span>
       </article>
 
       <article class="stat-card completed-card">
-        <div class="stat-icon">✓</div>
         <p class="stat-label">Completed Tasks</p>
         <h2>{{ data.completedTasks }}</h2>
         <span class="stat-description">Successfully completed</span>
       </article>
 
       <article class="stat-card overdue-card">
-        <div class="stat-icon">!</div>
         <p class="stat-label">Overdue Tasks</p>
         <h2>{{ data.overdueTasks }}</h2>
         <span class="stat-description">Past due date</span>
@@ -74,6 +71,159 @@
 
     </section>
 
+    <!-- Completion Progress -->
+    <section class="dashboard-section">
+      <div class="section-heading">
+        <div>
+          <h2>Overall Progress</h2>
+          <p>Track your task completion</p>
+        </div>
+
+        <span class="percentage">
+          {{ completionPercentage() }}%
+        </span>
+      </div>
+
+      <div
+        class="progress-track"
+        role="progressbar"
+        [attr.aria-valuenow]="completionPercentage()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-label="Task completion progress">
+
+        <div
+          class="progress-fill"
+          [style.width.%]="completionPercentage()">
+        </div>
+      </div>
+
+      <p class="progress-caption">
+        {{ data.completedTasks }} out of {{ data.totalTasks }} tasks completed
+      </p>
+    </section>
+
+    <!-- Status and Priority Summary -->
+    <section class="summary-grid">
+
+      <article class="dashboard-section summary-card">
+        <h2>Status Summary</h2>
+        <p class="section-description">Tasks grouped by status</p>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            <span class="dot pending-dot"></span>
+            Pending
+          </span>
+          <strong>{{ data.pendingTasks }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            <span class="dot progress-dot"></span>
+            In Progress
+          </span>
+          <strong>{{ data.inProgressTasks }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            <span class="dot completed-dot"></span>
+            Completed
+          </span>
+          <strong>{{ data.completedTasks }}</strong>
+        </div>
+      </article>
+
+      <article class="dashboard-section summary-card">
+        <h2>Priority Summary</h2>
+        <p class="section-description">Tasks grouped by priority</p>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            <span class="dot high-dot"></span>
+            High Priority
+          </span>
+          <strong>{{ highPriorityTasks() }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            <span class="dot medium-dot"></span>
+            Medium Priority
+          </span>
+          <strong>{{ mediumPriorityTasks() }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span class="summary-label">
+            <span class="dot low-dot"></span>
+            Low Priority
+          </span>
+          <strong>{{ lowPriorityTasks() }}</strong>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Recent Tasks -->
+    <section class="dashboard-section recent-section">
+      <div class="section-heading">
+        <div>
+          <h2>Recent Tasks</h2>
+          <p>Latest tasks added to your workspace</p>
+        </div>
+
+        <a routerLink="/tasks" class="view-all-link">
+          View All Tasks
+        </a>
+      </div>
+
+      @if (recentTasks().length === 0) {
+        <p class="empty-message">No tasks available.</p>
+      }
+      @else {
+        <div class="recent-task-list">
+          @for (task of recentTasks(); track task.id) {
+            <div class="recent-task-item">
+
+              <div class="recent-task-info">
+                <a [routerLink]="['/tasks', task.id]">
+                  {{ task.title }}
+                </a>
+                <span>Due: {{ task.dueDate | date:'dd MMM yyyy' }}</span>
+              </div>
+
+              <div class="recent-task-meta">
+                <span
+                  class="priority-badge"
+                  [ngClass]="{
+                    'high-priority': task.priority === 'High',
+                    'medium-priority': task.priority === 'Medium',
+                    'low-priority': task.priority === 'Low'
+                  }">
+                  {{ task.priority }}
+                </span>
+
+                <span
+                  class="status-badge"
+                  [ngClass]="{
+                    'pending-status': task.status === 'Pending',
+                    'progress-status': task.status === 'In Progress',
+                    'completed-status': task.status === 'Completed'
+                  }">
+                  {{ task.status }}
+                </span>
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+
+    </section>
+
+    <!-- Welcome Section -->
     <section class="welcome-card">
       <div>
         <h2>Your productivity overview</h2>
@@ -81,8 +231,9 @@
           Keep your tasks organized, stay focused and complete your work on time.
         </p>
       </div>
-      <div class="welcome-icon">🚀</div>
+      <div class="welcome-icon">TaskFlow</div>
     </section>
+
   }
 
 </div>
