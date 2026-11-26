@@ -1,0 +1,174 @@
+
+.form-page {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.form-header h1 {
+  font-size: 28px;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.form-header p {
+  color: #64748b;
+}
+
+.back-link {
+  color: #4f46e5;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.task-form {
+  background: white;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+  flex: 1;
+}
+
+.form-group label {
+  color: #334155;
+  font-weight: 600;
+}
+
+.form-group label span {
+  color: #dc2626;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  color: #1e293b;
+  background: white;
+  font: inherit;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-row {
+  display: flex;
+  gap: 18px;
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 22px;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.save-btn {
+  background: #4f46e5;
+  color: white;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.message {
+  padding: 15px;
+  margin-bottom: 18px;
+  border-radius: 7px;
+}
+
+.loading-message {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 650px) {
+  .form-page {
+    padding: 18px;
+  }
+
+  .form-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .task-form {
+    padding: 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

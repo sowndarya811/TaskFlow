@@ -127,6 +127,12 @@
                 {{ task.status }}
               </span>
             </td>
+            <a
+  [routerLink]="['/tasks/edit', task.id]"
+  class="edit-btn"
+>
+  Edit
+</a>
 
             <td>
               <button

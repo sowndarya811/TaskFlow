@@ -252,3 +252,18 @@
     width: 100%;
   }
 }
+.edit-btn {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-right: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.edit-btn:hover {
+  background: #bfdbfe;
+}
