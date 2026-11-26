@@ -1,4 +1,5 @@
 
+using TaskFlow.Backend.DTOs;
 using TaskFlow.Backend.Models;
 
 namespace TaskFlow.Backend.Repositories.Interfaces;
@@ -11,7 +12,12 @@ public interface ITaskRepository
         string? priority);
 
     Task<TaskItem?> GetByIdAsync(int id);
+
     Task<TaskItem> CreateAsync(TaskItem task);
+
     Task<TaskItem?> UpdateAsync(TaskItem task);
+
     Task<bool> DeleteAsync(int id);
+
+    Task<DashboardSummaryDto> GetDashboardSummaryAsync();
 }

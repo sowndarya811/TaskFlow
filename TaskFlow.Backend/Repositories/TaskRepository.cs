@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Backend.Data;
+using TaskFlow.Backend.DTOs;
 using TaskFlow.Backend.Models;
 using TaskFlow.Backend.Repositories.Interfaces;
 
@@ -24,20 +25,17 @@ public class TaskRepository : ITaskRepository
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            query = query.Where(t =>
-                t.Title.Contains(search));
+            query = query.Where(t => t.Title.Contains(search));
         }
 
         if (!string.IsNullOrWhiteSpace(status))
         {
-            query = query.Where(t =>
-                t.Status == status);
+            query = query.Where(t => t.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(priority))
         {
-            query = query.Where(t =>
-                t.Priority == priority);
+            query = query.Where(t => t.Priority == priority);
         }
 
         return await query.ToListAsync();
@@ -52,6 +50,7 @@ public class TaskRepository : ITaskRepository
     {
         await _context.Tasks.AddAsync(task);
         await _context.SaveChangesAsync();
+
         return task;
     }
 
@@ -69,7 +68,31 @@ public class TaskRepository : ITaskRepository
         existingTask.Status = task.Status;
 
         await _context.SaveChangesAsync();
+
         return existingTask;
+    }
+
+    public async Task<DashboardSummaryDto> GetDashboardSummaryAsync()
+    {
+        var today = DateTime.UtcNow.Date;
+
+        return new DashboardSummaryDto
+        {
+            TotalTasks = await _context.Tasks.CountAsync(),
+
+            PendingTasks = await _context.Tasks
+                .CountAsync(t => t.Status == "Pending"),
+
+            InProgressTasks = await _context.Tasks
+                .CountAsync(t => t.Status == "In Progress"),
+
+            CompletedTasks = await _context.Tasks
+                .CountAsync(t => t.Status == "Completed"),
+
+            OverdueTasks = await _context.Tasks
+                .CountAsync(t => t.DueDate < today &&
+                                 t.Status != "Completed")
+        };
     }
 
     public async Task<bool> DeleteAsync(int id)

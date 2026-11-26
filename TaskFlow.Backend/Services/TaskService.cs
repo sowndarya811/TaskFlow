@@ -1,4 +1,5 @@
 
+using TaskFlow.Backend.DTOs;
 using TaskFlow.Backend.Models;
 using TaskFlow.Backend.Repositories.Interfaces;
 using TaskFlow.Backend.Services.Interfaces;
@@ -21,6 +22,10 @@ public class TaskService : ITaskService
     {
         return await _taskRepository.GetAllAsync(
             search, status, priority);
+    }
+    public async Task<DashboardSummaryDto> GetDashboardSummaryAsync()
+    {
+        return await _taskRepository.GetDashboardSummaryAsync();
     }
 
     public async Task<TaskItem?> GetTaskByIdAsync(int id)

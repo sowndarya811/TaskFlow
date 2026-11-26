@@ -38,6 +38,15 @@ public class TasksController : ControllerBase
 
         return Ok(response);
     }
+    // GET: api/tasks/dashboard-summary
+
+    [HttpGet("dashboard-summary")]
+    public async Task<IActionResult> GetDashboardSummary()
+    {
+        var summary = await _taskService.GetDashboardSummaryAsync();
+
+        return Ok(summary);
+    }
 
     // GET: api/tasks/1
 
