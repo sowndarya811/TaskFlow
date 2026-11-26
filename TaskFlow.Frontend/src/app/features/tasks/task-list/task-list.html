@@ -1,1 +1,161 @@
-<p>task-list works!</p>
+
+<div class="task-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Task Management</h1>
+      <p>View, search and manage all your tasks.</p>
+    </div>
+
+    <a routerLink="/tasks/new" class="add-task-btn">
+      + Add New Task
+    </a>
+  </div>
+
+  <div class="filter-section">
+
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search tasks by title..."
+        [value]="searchTerm()"
+        (input)="onSearchChange($event)"
+        (keyup.enter)="searchTasks()"
+      />
+
+      <button type="button" (click)="searchTasks()">
+        Search
+      </button>
+    </div>
+
+    <select
+      [value]="selectedStatus()"
+      (change)="onStatusChange($event)"
+    >
+      <option value="">All Statuses</option>
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+
+    <select
+      [value]="selectedPriority()"
+      (change)="onPriorityChange($event)"
+    >
+      <option value="">All Priorities</option>
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <button
+      type="button"
+      class="clear-btn"
+      (click)="clearFilters()"
+    >
+      Clear Filters
+    </button>
+
+  </div>
+
+  <div *ngIf="loading()" class="message loading-message">
+    Loading tasks...
+  </div>
+
+  <div *ngIf="error()" class="message error-message">
+    {{ error() }}
+
+    <button type="button" (click)="loadTasks()">
+      Retry
+    </button>
+  </div>
+
+  <ng-container *ngIf="!loading() && !error()">
+
+    <div class="task-table-container">
+
+      <table class="task-table">
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Task Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let task of tasks()">
+
+            <td>#{{ task.id }}</td>
+
+            <td class="task-title">
+              {{ task.title }}
+            </td>
+
+            <td class="task-description">
+              {{ task.description || '-' }}
+            </td>
+
+            <td>
+              {{ task.dueDate | date:'dd MMM yyyy' }}
+            </td>
+
+            <td>
+              <span
+                class="priority-badge"
+                [class.low]="task.priority === 'Low'"
+                [class.medium]="task.priority === 'Medium'"
+                [class.high]="task.priority === 'High'"
+              >
+                {{ task.priority }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="status-badge"
+                [class.pending]="task.status === 'Pending'"
+                [class.in-progress]="task.status === 'In Progress'"
+                [class.completed]="task.status === 'Completed'"
+              >
+                {{ task.status }}
+              </span>
+            </td>
+
+            <td>
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteTask(task.id)"
+              >
+                Delete
+              </button>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="tasks().length === 0">
+            <td colspan="7" class="empty-message">
+              No tasks found.
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div class="task-count">
+      Total Tasks: <strong>{{ tasks().length }}</strong>
+    </div>
+
+  </ng-container>
+
+</div>
