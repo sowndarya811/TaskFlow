@@ -113,7 +113,9 @@
 
         <tbody>
 
-          <tr *ngFor="let task of paginatedTasks()">
+          <tr
+            *ngFor="let task of paginatedTasks()"
+            [class.overdue-row]="isOverdue(task)">
 
             <td>#{{ task.id }}</td>
 
@@ -125,10 +127,31 @@
               {{ task.description || '-' }}
             </td>
 
+            <!-- Due Date with Indicators -->
             <td>
-              {{ task.dueDate | date:'dd MMM yyyy' }}
+              <span
+                class="due-date"
+                [class.overdue]="isOverdue(task)"
+                [class.due-today]="isDueToday(task)">
+
+                {{ task.dueDate | date:'dd MMM yyyy' }}
+
+                <small
+                  *ngIf="isOverdue(task)"
+                  class="due-label">
+                  Overdue
+                </small>
+
+                <small
+                  *ngIf="isDueToday(task)"
+                  class="due-label">
+                  Due Today
+                </small>
+
+              </span>
             </td>
 
+            <!-- Priority -->
             <td>
               <span
                 class="priority-badge"
@@ -139,6 +162,7 @@
               </span>
             </td>
 
+            <!-- Status -->
             <td>
               <select
                 class="status-select"
@@ -159,6 +183,7 @@
               </small>
             </td>
 
+            <!-- Actions -->
             <td class="action-buttons">
 
               <a
@@ -184,6 +209,7 @@
 
           </tr>
 
+          <!-- Empty State -->
           <tr *ngIf="tasks().length === 0">
             <td colspan="7" class="empty-message">
               <strong>No tasks found.</strong>
@@ -198,7 +224,9 @@
     </div>
 
     <!-- Pagination -->
-    <div class="pagination-section" *ngIf="tasks().length > 0">
+    <div
+      class="pagination-section"
+      *ngIf="tasks().length > 0">
 
       <div class="task-count">
         Showing <strong>{{ startItem() }}–{{ endItem() }}</strong>

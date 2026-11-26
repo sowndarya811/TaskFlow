@@ -48,6 +48,7 @@ export class TaskList implements OnInit {
   // Sorting
   sortOption = signal<SortOption>('dueDateAsc');
 
+  // Sorted Tasks
   sortedTasks = computed(() => {
     const taskList = [...this.tasks()];
     const option = this.sortOption();
@@ -82,10 +83,12 @@ export class TaskList implements OnInit {
     });
   });
 
+  // Total Pages
   totalPages = computed(() =>
     Math.max(1, Math.ceil(this.sortedTasks().length / this.pageSize))
   );
 
+  // Current Page Tasks
   paginatedTasks = computed(() => {
     const startIndex = (this.currentPage() - 1) * this.pageSize;
 
@@ -95,12 +98,14 @@ export class TaskList implements OnInit {
     );
   });
 
+  // Starting Item
   startItem = computed(() =>
     this.sortedTasks().length === 0
       ? 0
       : (this.currentPage() - 1) * this.pageSize + 1
   );
 
+  // Ending Item
   endItem = computed(() =>
     Math.min(
       this.currentPage() * this.pageSize,
@@ -112,6 +117,37 @@ export class TaskList implements OnInit {
     this.loadTasks();
   }
 
+  // Check Overdue Tasks
+  isOverdue(task: Task): boolean {
+    if (task.status === 'Completed') {
+      return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    return dueDate < today;
+  }
+
+  // Check Tasks Due Today
+  isDueToday(task: Task): boolean {
+    if (task.status === 'Completed') {
+      return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    return dueDate.getTime() === today.getTime();
+  }
+
+  // Load Tasks
   loadTasks(): void {
     this.loading.set(true);
     this.error.set('');
@@ -145,11 +181,13 @@ export class TaskList implements OnInit {
     });
   }
 
+  // Search Input
   onSearchChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.searchTerm.set(value);
   }
 
+  // Status Filter
   onStatusChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value as TaskStatus | '';
     this.selectedStatus.set(value);
@@ -157,6 +195,7 @@ export class TaskList implements OnInit {
     this.loadTasks();
   }
 
+  // Priority Filter
   onPriorityChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value as TaskPriority | '';
     this.selectedPriority.set(value);
@@ -164,17 +203,20 @@ export class TaskList implements OnInit {
     this.loadTasks();
   }
 
+  // Sorting
   onSortChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value as SortOption;
     this.sortOption.set(value);
     this.currentPage.set(1);
   }
 
+  // Search Tasks
   searchTasks(): void {
     this.currentPage.set(1);
     this.loadTasks();
   }
 
+  // Clear Filters
   clearFilters(): void {
     this.searchTerm.set('');
     this.selectedStatus.set('');
@@ -184,6 +226,7 @@ export class TaskList implements OnInit {
     this.loadTasks();
   }
 
+  // Pagination
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages()) {
       return;
@@ -192,6 +235,7 @@ export class TaskList implements OnInit {
     this.currentPage.set(page);
   }
 
+  // Update Task Status
   updateTaskStatus(task: Task, event: Event): void {
     const newStatus = (event.target as HTMLSelectElement).value as TaskStatus;
 
@@ -238,6 +282,7 @@ export class TaskList implements OnInit {
     });
   }
 
+  // Delete Task
   deleteTask(id: number): void {
     const confirmed = window.confirm(
       'Are you sure you want to delete this task?'
